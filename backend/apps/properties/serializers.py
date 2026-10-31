@@ -30,7 +30,7 @@ class UnitSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("id", "mpesa_bill_ref", "created_at", "updated_at")
 
-    def get_active_tenant(self, obj):
+    def get_active_tenant(self, obj) -> dict | None:
         lease = obj.active_lease
         if not lease:
             return None
@@ -69,13 +69,13 @@ class PropertySerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("id", "created_at", "updated_at", "units_count", "occupied_units", "caretakers")
 
-    def get_units_count(self, obj):
+    def get_units_count(self, obj) -> int:
         return obj.units.count()
 
-    def get_occupied_units(self, obj):
+    def get_occupied_units(self, obj) -> int:
         return obj.units.filter(status=Unit.Status.OCCUPIED).count()
 
-    def get_caretakers(self, obj):
+    def get_caretakers(self, obj) -> list[dict]:
         return [
             {"id": str(a.user_id), "name": a.user.full_name, "phone": a.user.phone}
             for a in obj.assignments.select_related("user")

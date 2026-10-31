@@ -7,6 +7,8 @@ class TenantSerializer(serializers.ModelSerializer):
     portal_enabled = serializers.BooleanField(read_only=True)
     active_lease_id = serializers.SerializerMethodField()
     unit = serializers.SerializerMethodField()
+    balance = serializers.SerializerMethodField()
+    lease_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Tenant
@@ -23,16 +25,27 @@ class TenantSerializer(serializers.ModelSerializer):
             "portal_enabled",
             "active_lease_id",
             "unit",
+            "balance",
+            "lease_status",
             "created_at",
             "updated_at",
         )
-        read_only_fields = ("id", "created_at", "updated_at", "portal_enabled", "active_lease_id", "unit")
+        read_only_fields = (
+            "id",
+            "created_at",
+            "updated_at",
+            "portal_enabled",
+            "active_lease_id",
+            "unit",
+            "balance",
+            "lease_status",
+        )
 
-    def get_active_lease_id(self, obj):
+    def get_active_lease_id(self, obj) -> str | None:
         lease = obj.active_lease
         return str(lease.id) if lease else None
 
-    def get_unit(self, obj):
+    def get_unit(self, obj) -> dict | None:
         lease = obj.active_lease
         if not lease:
             return None
@@ -42,6 +55,22 @@ class TenantSerializer(serializers.ModelSerializer):
             "property": lease.unit.property.name,
             "bill_ref": lease.unit.mpesa_bill_ref,
         }
+
+    def get_balance(self, obj) -> str | None:
+        lease = obj.active_lease
+        if not lease:
+            return None
+        from apps.ledger.services import lease_balance
+
+        return str(lease_balance(lease))
+
+    def get_lease_status(self, obj) -> str | None:
+        lease = obj.active_lease
+        if not lease:
+            return None
+        from apps.ledger.services import lease_status
+
+        return lease_status(lease)
 
     def validate_phone(self, value):
         from apps.accounts.utils import normalize_phone
