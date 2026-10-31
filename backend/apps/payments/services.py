@@ -34,8 +34,8 @@ ZERO = Decimal("0.00")
 def _decimal(value, field="amount") -> Decimal:
     try:
         amount = Decimal(str(value)).quantize(Decimal("0.01"))
-    except (InvalidOperation, TypeError, ValueError):
-        raise ValueError(f"Invalid {field}")
+    except (InvalidOperation, TypeError, ValueError) as exc:
+        raise ValueError(f"Invalid {field}") from exc
     if amount <= ZERO:
         raise ValueError(f"{field} must be greater than zero")
     return amount
@@ -78,7 +78,7 @@ def issue_receipt(payment, *, issued_by=None, number=None) -> Receipt:
 
 
 def _notify_receipt(payment, receipt):
-    from apps.notifications.services import send_payment_receipt_sms
+    from apps.notifications.sms import send_payment_receipt_sms
 
     try:
         send_payment_receipt_sms(payment, receipt)

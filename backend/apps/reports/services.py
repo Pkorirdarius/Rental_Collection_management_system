@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import date, timedelta
+from datetime import date
 from decimal import Decimal
 
 from django.db.models import Sum
@@ -7,8 +7,6 @@ from django.utils import timezone
 
 from apps.ledger.models import LedgerEntry
 from apps.ledger.services import (
-    ageing_bucket,
-    days_overdue,
     lease_ageing,
     lease_balance,
     lease_status,

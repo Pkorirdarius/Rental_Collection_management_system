@@ -95,7 +95,12 @@ class PromiseUpdateSerializer(serializers.ModelSerializer):
         from django.utils import timezone
 
         instance = super().update(instance, validated_data)
-        if instance.status in {PromiseToPay.Status.KEPT, PromiseToPay.Status.BROKEN, PromiseToPay.Status.CANCELLED}:
+        resolved_statuses = {
+            PromiseToPay.Status.KEPT,
+            PromiseToPay.Status.BROKEN,
+            PromiseToPay.Status.CANCELLED,
+        }
+        if instance.status in resolved_statuses:
             instance.resolved_at = timezone.now()
             instance.save(update_fields=["resolved_at", "updated_at"])
         return instance

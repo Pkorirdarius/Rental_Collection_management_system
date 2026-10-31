@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from apps.leases.models import Lease
 from apps.properties.models import Unit
-from apps.tenants.models import Tenant
 
 
 class LeaseSerializer(serializers.ModelSerializer):

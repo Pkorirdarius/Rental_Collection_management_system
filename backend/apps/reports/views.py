@@ -1,10 +1,10 @@
 from django.http import HttpResponse
-from rest_framework import viewsets
-from apps.core.permissions import IsAdmin
+from rest_framework import serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.models import AuditLog
+from apps.core.permissions import IsAdmin
 from apps.reports.exports import build_excel, build_report_pdf
 from apps.reports.services import (
     arrears_ageing,
@@ -109,7 +109,28 @@ class ReportExportView(AdminReportView):
         return response
 
 
+class AuditLogSerializer(serializers.ModelSerializer):
+    actor = serializers.CharField(source="actor.full_name", read_only=True, default="")
+
+    class Meta:
+        model = AuditLog
+        fields = (
+            "id",
+            "action",
+            "actor",
+            "model_name",
+            "object_id",
+            "object_repr",
+            "changes",
+            "ip_address",
+            "hash",
+            "created_at",
+        )
+        read_only_fields = fields
+
+
 class AuditLogViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = AuditLogSerializer
     permission_classes = [IsAdmin]
 
     def get_queryset(self):

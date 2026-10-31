@@ -1,6 +1,5 @@
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate
 from django.core import signing
-from django.db.models import Q
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -58,7 +57,10 @@ class LoginView(APIView):
             password=serializer.validated_data["password"],
         )
         if user is None:
-            audit(AuditLog.Action.LOGIN_FAILED, changes={"identifier": serializer.validated_data["identifier"]})
+            audit(
+                AuditLog.Action.LOGIN_FAILED,
+                changes={"identifier": serializer.validated_data["identifier"]},
+            )
             return Response(
                 {"detail": "Invalid credentials."},
                 status=status.HTTP_401_UNAUTHORIZED,

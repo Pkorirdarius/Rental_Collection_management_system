@@ -10,5 +10,5 @@ PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 MEDIA_ROOT = BASE_DIR / "test-media"  # noqa: F405
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
-MPESA = {**MPESA, "ENABLED": False}  # noqa: F405
+MPESA = {**MPESA, "ENABLED": False, "CALLBACK_TOKEN": "test-token"}  # noqa: F405
 AFRICASTALKING = {**AFRICASTALKING, "ENABLED": False}  # noqa: F405

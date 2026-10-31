@@ -13,7 +13,10 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Profile", {"fields": ("full_name", "phone", "role", "organization")}),
-        ("Security", {"fields": ("totp_enabled", "must_change_password", "is_active", "is_staff", "is_superuser")}),
+        (
+            "Security",
+            {"fields": ("totp_enabled", "must_change_password", "is_active", "is_staff", "is_superuser")},
+        ),
         ("Permissions", {"fields": ("groups", "user_permissions")}),
         ("Dates", {"fields": ("last_login", "date_joined")}),
     )

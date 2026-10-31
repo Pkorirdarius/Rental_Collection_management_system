@@ -1,5 +1,4 @@
 import uuid
-from decimal import Decimal
 
 from django.conf import settings
 from django.db import models
@@ -181,6 +180,9 @@ class ReceiptSequence(models.Model):
         constraints = [
             models.UniqueConstraint(fields=["organization", "year"], name="unique_receipt_sequence")
         ]
+
+    def __str__(self) -> str:
+        return f"{self.organization_id}-{self.year}:{self.last_number}"
 
 
 class Receipt(TimeStampedModel):

@@ -1,9 +1,8 @@
-from django.db.models import Count, Q
+from django.db.models import Count
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.accounts.models import User
 from apps.core.audit import audit
 from apps.core.models import AuditLog
 from apps.core.permissions import IsAdmin, IsAdminOrCaretakerReadOnly

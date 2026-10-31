@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from rest_framework import serializers
 
+from apps.leases.models import Lease
 from apps.ledger.models import LedgerEntry
 
 
@@ -38,19 +39,13 @@ class LedgerEntrySerializer(serializers.ModelSerializer):
 
 
 class AdjustmentSerializer(serializers.Serializer):
-    lease = serializers.PrimaryKeyRelatedField(queryset=None)
+    lease = serializers.PrimaryKeyRelatedField(queryset=Lease.objects.all())
     entry_type = serializers.ChoiceField(
         choices=[LedgerEntry.Type.ADJUSTMENT, LedgerEntry.Type.WAIVER]
     )
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)
     effective_date = serializers.DateField(required=False)
     description = serializers.CharField(max_length=255, required=False, allow_blank=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        from apps.leases.models import Lease
-
-        self.fields["lease"].queryset = Lease.objects.all()
 
     def validate(self, attrs):
         request = self.context["request"]
