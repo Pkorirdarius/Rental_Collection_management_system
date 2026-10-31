@@ -48,17 +48,17 @@ class LeaseSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("id", "terminated_at", "created_at", "updated_at")
 
-    def get_balance(self, obj):
+    def get_balance(self, obj) -> str:
         from apps.ledger.services import lease_balance
 
         return str(lease_balance(obj))
 
-    def get_days_overdue(self, obj):
+    def get_days_overdue(self, obj) -> int:
         from apps.ledger.services import days_overdue
 
         return days_overdue(obj)
 
-    def get_payment_status(self, obj):
+    def get_payment_status(self, obj) -> str:
         from apps.ledger.services import lease_status
 
         return lease_status(obj)

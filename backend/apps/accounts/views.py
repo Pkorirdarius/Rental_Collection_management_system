@@ -221,7 +221,10 @@ class UserViewSet(generics.ListCreateAPIView):
     serializer_class = UserCreateSerializer
 
     def get_queryset(self):
-        return User.objects.filter(organization=self.request.user.organization).exclude(
+        organization_id = getattr(self.request.user, "organization_id", None)
+        if not organization_id:
+            return User.objects.none()
+        return User.objects.filter(organization_id=organization_id).exclude(
             role=User.Role.TENANT
         )
 
@@ -239,7 +242,10 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserUpdateSerializer
 
     def get_queryset(self):
-        return User.objects.filter(organization=self.request.user.organization).exclude(
+        organization_id = getattr(self.request.user, "organization_id", None)
+        if not organization_id:
+            return User.objects.none()
+        return User.objects.filter(organization_id=organization_id).exclude(
             role=User.Role.TENANT
         )
 

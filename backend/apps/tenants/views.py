@@ -65,7 +65,7 @@ class TenantViewSet(AuditedModelViewSet):
         tenant = self.get_object()
         return Response(tenant_statement(tenant))
 
-    @action(detail=True, methods=["get"], url_path="statement.pdf")
+    @action(detail=True, methods=["get"], url_path="statement-pdf")
     def statement_pdf(self, request, pk=None):
         from django.http import HttpResponse
 

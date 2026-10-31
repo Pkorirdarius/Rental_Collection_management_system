@@ -24,8 +24,10 @@ class PropertyViewSet(AuditedModelViewSet):
     filterset_fields = ["is_active", "county"]
 
     def get_queryset(self):
-        qs = Property.objects.select_related("organization").annotate(
-            _units=Count("units", distinct=True)
+        qs = (
+            Property.objects.select_related("organization")
+            .annotate(_units=Count("units", distinct=True))
+            .order_by("name")
         )
         user = self.request.user
         if is_admin(user):

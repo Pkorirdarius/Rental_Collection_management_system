@@ -1,0 +1,4683 @@
+openapi: 3.0.3
+info:
+  title: Rent Manager Kenya API
+  version: 1.0.0
+  description: 'Rent management for Kenyan landlords: properties, leases, immutable
+    ledger, M-Pesa C2B/STK, cash receipts, arrears and reporting.'
+paths:
+  /api/v1/audit-logs/:
+    get:
+      operationId: api_v1_audit_logs_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditLogList'
+          description: ''
+  /api/v1/audit-logs/{id}/:
+    get:
+      operationId: api_v1_audit_logs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+          description: ''
+  /api/v1/auth/2fa/disable:
+    post:
+      operationId: api_v1_auth_2fa_disable_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/2fa/enable:
+    post:
+      operationId: api_v1_auth_2fa_enable_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/2fa/setup:
+    post:
+      operationId: api_v1_auth_2fa_setup_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/2fa/verify:
+    post:
+      operationId: api_v1_auth_2fa_verify_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/login:
+    post:
+      operationId: api_v1_auth_login_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/logout:
+    post:
+      operationId: api_v1_auth_logout_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/me:
+    get:
+      operationId: api_v1_auth_me_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: api_v1_auth_me_update
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: api_v1_auth_me_partial_update
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/auth/password/change:
+    post:
+      operationId: api_v1_auth_password_change_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/refresh:
+    post:
+      operationId: api_v1_auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/auth/users:
+    get:
+      operationId: api_v1_auth_users_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: api_v1_auth_users_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+          description: ''
+  /api/v1/auth/users/{id}:
+    get:
+      operationId: api_v1_auth_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+          description: ''
+    put:
+      operationId: api_v1_auth_users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+          description: ''
+    patch:
+      operationId: api_v1_auth_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdateRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+          description: ''
+    delete:
+      operationId: api_v1_auth_users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/dashboard/overdue:
+    get:
+      operationId: api_v1_dashboard_overdue_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/dashboard/summary:
+    get:
+      operationId: api_v1_dashboard_summary_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/leases/:
+    get:
+      operationId: api_v1_leases_list
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - ENDED
+          - PENDING
+          - TERMINATED
+        description: |-
+          * `PENDING` - Pending
+          * `ACTIVE` - Active
+          * `ENDED` - Ended
+          * `TERMINATED` - Terminated
+      - in: query
+        name: tenant
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: unit
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLeaseList'
+          description: ''
+    post:
+      operationId: api_v1_leases_create
+      description: Adds immutable audit records around standard CRUD operations.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/v1/leases/{id}/:
+    get:
+      operationId: api_v1_leases_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+    put:
+      operationId: api_v1_leases_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+    patch:
+      operationId: api_v1_leases_partial_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaseRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+    delete:
+      operationId: api_v1_leases_destroy
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/leases/{id}/balance/:
+    get:
+      operationId: api_v1_leases_balance_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/v1/leases/{id}/statement/:
+    get:
+      operationId: api_v1_leases_statement_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/v1/leases/{id}/terminate/:
+    post:
+      operationId: api_v1_leases_terminate_create
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LeaseRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/v1/ledger/:
+    get:
+      operationId: api_v1_ledger_list
+      parameters:
+      - in: query
+        name: entry_type
+        schema:
+          type: string
+          enum:
+          - ADJUSTMENT
+          - DEPOSIT
+          - DEPOSIT_REFUND
+          - LATE_FEE
+          - PAYMENT
+          - RENT_CHARGE
+          - REVERSAL
+          - WAIVER
+        description: |-
+          * `RENT_CHARGE` - Rent charge
+          * `LATE_FEE` - Late fee
+          * `PAYMENT` - Payment
+          * `ADJUSTMENT` - Adjustment
+          * `WAIVER` - Waiver
+          * `DEPOSIT` - Deposit received
+          * `DEPOSIT_REFUND` - Deposit refund
+          * `REVERSAL` - Reversal
+      - in: query
+        name: lease
+        schema:
+          type: string
+          format: uuid
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: payment
+        schema:
+          type: string
+          format: uuid
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: source
+        schema:
+          type: string
+          enum:
+          - CASH
+          - MANUAL
+          - MPESA
+          - SYSTEM
+        description: |-
+          * `SYSTEM` - System
+          * `CASH` - Cash
+          * `MPESA` - M-Pesa
+          * `MANUAL` - Manual
+      - in: query
+        name: tenant
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLedgerEntryList'
+          description: ''
+  /api/v1/ledger-summary:
+    get:
+      operationId: api_v1_ledger_summary_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/ledger/{id}/:
+    get:
+      operationId: api_v1_ledger_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this ledger entry.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LedgerEntry'
+          description: ''
+  /api/v1/ledger/{id}/reverse:
+    post:
+      operationId: api_v1_ledger_reverse_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/ledger/adjustments:
+    post:
+      operationId: api_v1_ledger_adjustments_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/messages/:
+    get:
+      operationId: api_v1_messages_list
+      parameters:
+      - in: query
+        name: channel
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - FAILED
+          - PENDING
+          - SENT
+          - SKIPPED
+        description: |-
+          * `PENDING` - Pending
+          * `SENT` - Sent
+          * `FAILED` - Failed
+          * `SKIPPED` - Skipped
+      - in: query
+        name: tenant
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMessageLogList'
+          description: ''
+  /api/v1/messages/{id}/:
+    get:
+      operationId: api_v1_messages_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this message log.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageLog'
+          description: ''
+  /api/v1/notifications/:
+    get:
+      operationId: api_v1_notifications_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNotificationList'
+          description: ''
+  /api/v1/notifications/{id}/:
+    get:
+      operationId: api_v1_notifications_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/{id}/read/:
+    post:
+      operationId: api_v1_notifications_read_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/read_all/:
+    post:
+      operationId: api_v1_notifications_read_all_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/payments/:
+    get:
+      operationId: api_v1_payments_list
+      parameters:
+      - in: query
+        name: lease
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: method
+        schema:
+          type: string
+          enum:
+          - BANK
+          - CASH
+          - MPESA_C2B
+          - MPESA_STK
+        description: |-
+          * `CASH` - Cash
+          * `MPESA_C2B` - M-Pesa C2B
+          * `MPESA_STK` - M-Pesa STK Push
+          * `BANK` - Bank transfer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - CONFIRMED
+          - FAILED
+          - PENDING
+          - REVERSED
+          - UNMATCHED
+        description: |-
+          * `PENDING` - Pending
+          * `CONFIRMED` - Confirmed
+          * `UNMATCHED` - Unmatched
+          * `FAILED` - Failed
+          * `REVERSED` - Reversed
+      - in: query
+        name: tenant
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: unit
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPaymentList'
+          description: ''
+  /api/v1/payments/{id}/:
+    get:
+      operationId: api_v1_payments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this payment.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/v1/payments/{id}/match:
+    post:
+      operationId: api_v1_payments_match_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/{id}/receipt.pdf:
+    get:
+      operationId: api_v1_payments_receipt.pdf_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/{id}/reverse:
+    post:
+      operationId: api_v1_payments_reverse_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/cash:
+    post:
+      operationId: api_v1_payments_cash_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/mpesa/request:
+    post:
+      operationId: api_v1_payments_mpesa_request_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/mpesa/requests/{id}:
+    get:
+      operationId: api_v1_payments_mpesa_requests_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/mpesa/stk-push:
+    post:
+      operationId: api_v1_payments_mpesa_stk_push_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/unmatched:
+    get:
+      operationId: api_v1_payments_unmatched_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/portal/me:
+    get:
+      operationId: api_v1_portal_me_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/portal/me/balance:
+    get:
+      operationId: api_v1_portal_me_balance_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/portal/me/pay:
+    post:
+      operationId: api_v1_portal_me_pay_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/portal/me/payments:
+    get:
+      operationId: api_v1_portal_me_payments_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/portal/me/receipts:
+    get:
+      operationId: api_v1_portal_me_receipts_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/portal/me/statement:
+    get:
+      operationId: api_v1_portal_me_statement_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/promises/:
+    get:
+      operationId: api_v1_promises_list
+      parameters:
+      - in: query
+        name: lease
+        schema:
+          type: string
+          format: uuid
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - BROKEN
+          - CANCELLED
+          - KEPT
+          - OPEN
+        description: |-
+          * `OPEN` - Open
+          * `KEPT` - Kept
+          * `BROKEN` - Broken
+          * `CANCELLED` - Cancelled
+      - in: query
+        name: tenant
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPromiseList'
+          description: ''
+    post:
+      operationId: api_v1_promises_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromiseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PromiseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PromiseRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Promise'
+          description: ''
+  /api/v1/promises/{id}/:
+    get:
+      operationId: api_v1_promises_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this promise to pay.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Promise'
+          description: ''
+    put:
+      operationId: api_v1_promises_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this promise to pay.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromiseUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PromiseUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PromiseUpdateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromiseUpdate'
+          description: ''
+    patch:
+      operationId: api_v1_promises_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this promise to pay.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPromiseUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPromiseUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPromiseUpdateRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromiseUpdate'
+          description: ''
+    delete:
+      operationId: api_v1_promises_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this promise to pay.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/properties/:
+    get:
+      operationId: api_v1_properties_list
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPropertyList'
+          description: ''
+    post:
+      operationId: api_v1_properties_create
+      description: Adds immutable audit records around standard CRUD operations.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/v1/properties/{id}/:
+    get:
+      operationId: api_v1_properties_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    put:
+      operationId: api_v1_properties_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    patch:
+      operationId: api_v1_properties_partial_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPropertyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPropertyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPropertyRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    delete:
+      operationId: api_v1_properties_destroy
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/properties/{id}/assign-caretaker/:
+    post:
+      operationId: api_v1_properties_assign_caretaker_create
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/v1/properties/{id}/assignments/:
+    get:
+      operationId: api_v1_properties_assignments_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/v1/properties/{id}/remove-caretaker/:
+    post:
+      operationId: api_v1_properties_remove_caretaker_create
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/v1/property-assignments/:
+    get:
+      operationId: api_v1_property_assignments_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: property
+        schema:
+          type: string
+          format: uuid
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: user
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPropertyAssignmentList'
+          description: ''
+    post:
+      operationId: api_v1_property_assignments_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyAssignmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PropertyAssignmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PropertyAssignmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyAssignment'
+          description: ''
+  /api/v1/property-assignments/{id}/:
+    get:
+      operationId: api_v1_property_assignments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this property assignment.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyAssignment'
+          description: ''
+    put:
+      operationId: api_v1_property_assignments_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this property assignment.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyAssignmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PropertyAssignmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PropertyAssignmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyAssignment'
+          description: ''
+    patch:
+      operationId: api_v1_property_assignments_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this property assignment.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPropertyAssignmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPropertyAssignmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPropertyAssignmentRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyAssignment'
+          description: ''
+    delete:
+      operationId: api_v1_property_assignments_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this property assignment.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/reminders/:
+    get:
+      operationId: api_v1_reminders_list
+      parameters:
+      - in: query
+        name: lease
+        schema:
+          type: string
+          format: uuid
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: reminder_type
+        schema:
+          type: string
+          enum:
+          - DUE
+          - MANUAL
+          - OVERDUE_1
+          - OVERDUE_14
+          - OVERDUE_3
+          - OVERDUE_30
+          - OVERDUE_7
+          - PRE_DUE
+        description: |-
+          * `PRE_DUE` - Before due date
+          * `DUE` - Due today
+          * `OVERDUE_1` - Overdue 1 day
+          * `OVERDUE_3` - Overdue 3 days
+          * `OVERDUE_7` - Overdue 7 days
+          * `OVERDUE_14` - Overdue 14 days
+          * `OVERDUE_30` - Overdue 30 days
+          * `MANUAL` - Manual reminder
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - FAILED
+          - PENDING
+          - SENT
+          - SKIPPED
+        description: |-
+          * `PENDING` - Pending
+          * `SENT` - Sent
+          * `FAILED` - Failed
+          * `SKIPPED` - Skipped
+      - in: query
+        name: tenant
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReminderList'
+          description: ''
+  /api/v1/reminders/{id}/:
+    get:
+      operationId: api_v1_reminders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this reminder.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+          description: ''
+  /api/v1/reminders/{id}/send/:
+    post:
+      operationId: api_v1_reminders_send_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this reminder.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+          description: ''
+  /api/v1/reminders/manual/:
+    post:
+      operationId: api_v1_reminders_manual_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+          description: ''
+  /api/v1/reports/arrears-ageing:
+    get:
+      operationId: api_v1_reports_arrears_ageing_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/expected-vs-collected:
+    get:
+      operationId: api_v1_reports_expected_vs_collected_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/export:
+    get:
+      operationId: api_v1_reports_export_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/occupancy:
+    get:
+      operationId: api_v1_reports_occupancy_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/property-income:
+    get:
+      operationId: api_v1_reports_property_income_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/settings/reminders:
+    get:
+      operationId: api_v1_settings_reminders_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: api_v1_settings_reminders_partial_update
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/tenants/:
+    get:
+      operationId: api_v1_tenants_list
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+        description: |-
+          * `ACTIVE` - Active
+          * `INACTIVE` - Inactive
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTenantList'
+          description: ''
+    post:
+      operationId: api_v1_tenants_create
+      description: Adds immutable audit records around standard CRUD operations.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+  /api/v1/tenants/{id}/:
+    get:
+      operationId: api_v1_tenants_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+    put:
+      operationId: api_v1_tenants_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+    patch:
+      operationId: api_v1_tenants_partial_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTenantRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTenantRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTenantRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+    delete:
+      operationId: api_v1_tenants_destroy
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/tenants/{id}/balance/:
+    get:
+      operationId: api_v1_tenants_balance_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+  /api/v1/tenants/{id}/portal-invite/:
+    post:
+      operationId: api_v1_tenants_portal_invite_create
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+  /api/v1/tenants/{id}/statement/:
+    get:
+      operationId: api_v1_tenants_statement_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+  /api/v1/tenants/{id}/statement-pdf/:
+    get:
+      operationId: api_v1_tenants_statement_pdf_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this tenant.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+          description: ''
+  /api/v1/units/:
+    get:
+      operationId: api_v1_units_list
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUnitList'
+          description: ''
+    post:
+      operationId: api_v1_units_create
+      description: Adds immutable audit records around standard CRUD operations.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+  /api/v1/units/{id}/:
+    get:
+      operationId: api_v1_units_retrieve
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+    put:
+      operationId: api_v1_units_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+    patch:
+      operationId: api_v1_units_partial_update
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUnitRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUnitRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUnitRequest'
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+    delete:
+      operationId: api_v1_units_destroy
+      description: Adds immutable audit records around standard CRUD operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/webhooks/mpesa/c2b/confirmation:
+    post:
+      operationId: api_v1_webhooks_mpesa_c2b_confirmation_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/webhooks/mpesa/c2b/result:
+    post:
+      operationId: api_v1_webhooks_mpesa_c2b_result_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/webhooks/mpesa/c2b/validation:
+    post:
+      operationId: api_v1_webhooks_mpesa_c2b_validation_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/webhooks/mpesa/stk/callback:
+    post:
+      operationId: api_v1_webhooks_mpesa_stk_callback_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /healthz:
+    get:
+      operationId: healthz_retrieve
+      tags:
+      - healthz
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    ActionEnum:
+      enum:
+      - LOGIN
+      - LOGIN_FAILED
+      - LOGOUT
+      - CREATE
+      - UPDATE
+      - DELETE
+      - RESTORE
+      - PAYMENT_RECORDED
+      - PAYMENT_REVERSED
+      - PAYMENT_MATCHED
+      - LEDGER_POSTED
+      - REMINDER_SENT
+      - STK_PUSH
+      - MPESA_CALLBACK
+      - EXPORT
+      type: string
+      description: |-
+        * `LOGIN` - Login
+        * `LOGIN_FAILED` - Login failed
+        * `LOGOUT` - Logout
+        * `CREATE` - Create
+        * `UPDATE` - Update
+        * `DELETE` - Delete
+        * `RESTORE` - Restore
+        * `PAYMENT_RECORDED` - Payment recorded
+        * `PAYMENT_REVERSED` - Payment reversed
+        * `PAYMENT_MATCHED` - Payment matched
+        * `LEDGER_POSTED` - Ledger posted
+        * `REMINDER_SENT` - Reminder sent
+        * `STK_PUSH` - STK push
+        * `MPESA_CALLBACK` - M-Pesa callback
+        * `EXPORT` - Export
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        action:
+          allOf:
+          - $ref: '#/components/schemas/ActionEnum'
+          readOnly: true
+        actor:
+          type: string
+          readOnly: true
+          default: ''
+        model_name:
+          type: string
+          readOnly: true
+        object_id:
+          type: string
+          readOnly: true
+        object_repr:
+          type: string
+          readOnly: true
+        changes:
+          readOnly: true
+        ip_address:
+          type: string
+          readOnly: true
+          nullable: true
+        hash:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - action
+      - actor
+      - changes
+      - created_at
+      - hash
+      - id
+      - ip_address
+      - model_name
+      - object_id
+      - object_repr
+    EntryTypeEnum:
+      enum:
+      - RENT_CHARGE
+      - LATE_FEE
+      - PAYMENT
+      - ADJUSTMENT
+      - WAIVER
+      - DEPOSIT
+      - DEPOSIT_REFUND
+      - REVERSAL
+      type: string
+      description: |-
+        * `RENT_CHARGE` - Rent charge
+        * `LATE_FEE` - Late fee
+        * `PAYMENT` - Payment
+        * `ADJUSTMENT` - Adjustment
+        * `WAIVER` - Waiver
+        * `DEPOSIT` - Deposit received
+        * `DEPOSIT_REFUND` - Deposit refund
+        * `REVERSAL` - Reversal
+    LateFeeTypeEnum:
+      enum:
+      - NONE
+      - FLAT
+      - PERCENT
+      type: string
+      description: |-
+        * `NONE` - None
+        * `FLAT` - Flat amount
+        * `PERCENT` - Percentage of rent
+    Lease:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant:
+          type: string
+          format: uuid
+        tenant_name:
+          type: string
+          readOnly: true
+        tenant_phone:
+          type: string
+          readOnly: true
+        unit:
+          type: string
+          format: uuid
+        unit_code:
+          type: string
+          readOnly: true
+        property_name:
+          type: string
+          readOnly: true
+        property_id:
+          type: string
+          format: uuid
+          readOnly: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        rent_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        due_day:
+          type: integer
+          maximum: 28
+          minimum: 1
+        grace_period_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        deposit_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        deposit_paid:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        late_fee_type:
+          $ref: '#/components/schemas/LateFeeTypeEnum'
+        late_fee_value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        late_fee_applies_after_grace:
+          type: boolean
+        proration_enabled:
+          type: boolean
+          description: Prorate the first and last month by days occupied.
+        status:
+          $ref: '#/components/schemas/LeaseStatusEnum'
+        terminated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        termination_reason:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+        balance:
+          type: string
+          readOnly: true
+        days_overdue:
+          type: integer
+          readOnly: true
+        payment_status:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - balance
+      - created_at
+      - days_overdue
+      - id
+      - payment_status
+      - property_id
+      - property_name
+      - rent_amount
+      - start_date
+      - tenant
+      - tenant_name
+      - tenant_phone
+      - terminated_at
+      - unit
+      - unit_code
+      - updated_at
+    LeaseRequest:
+      type: object
+      properties:
+        tenant:
+          type: string
+          format: uuid
+        unit:
+          type: string
+          format: uuid
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        rent_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        due_day:
+          type: integer
+          maximum: 28
+          minimum: 1
+        grace_period_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        deposit_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        deposit_paid:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        late_fee_type:
+          $ref: '#/components/schemas/LateFeeTypeEnum'
+        late_fee_value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        late_fee_applies_after_grace:
+          type: boolean
+        proration_enabled:
+          type: boolean
+          description: Prorate the first and last month by days occupied.
+        status:
+          $ref: '#/components/schemas/LeaseStatusEnum'
+        termination_reason:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+      required:
+      - rent_amount
+      - start_date
+      - tenant
+      - unit
+    LeaseStatusEnum:
+      enum:
+      - PENDING
+      - ACTIVE
+      - ENDED
+      - TERMINATED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `ACTIVE` - Active
+        * `ENDED` - Ended
+        * `TERMINATED` - Terminated
+    LedgerEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        lease:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        unit:
+          type: string
+          format: uuid
+          readOnly: true
+        unit_code:
+          type: string
+          readOnly: true
+        property_name:
+          type: string
+          readOnly: true
+        entry_type:
+          allOf:
+          - $ref: '#/components/schemas/EntryTypeEnum'
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: 'Signed amount: debit positive, credit negative.'
+        effective_date:
+          type: string
+          format: date
+          readOnly: true
+        period_start:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+        period_end:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+        description:
+          type: string
+          readOnly: true
+        source:
+          allOf:
+          - $ref: '#/components/schemas/SourceEnum'
+          readOnly: true
+        payment:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        payment_reference:
+          type: string
+          readOnly: true
+          default: ''
+        reversal_of:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        metadata:
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount
+      - created_at
+      - description
+      - effective_date
+      - entry_type
+      - id
+      - lease
+      - metadata
+      - payment
+      - payment_reference
+      - period_end
+      - period_start
+      - property_name
+      - reversal_of
+      - source
+      - tenant
+      - tenant_name
+      - unit
+      - unit_code
+    MessageLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        phone:
+          type: string
+          readOnly: true
+        channel:
+          type: string
+          readOnly: true
+        template:
+          type: string
+          readOnly: true
+        body:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status249Enum'
+          readOnly: true
+        provider_message_id:
+          type: string
+          readOnly: true
+        cost:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,4})?$
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+        retry_count:
+          type: integer
+          readOnly: true
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - body
+      - channel
+      - cost
+      - created_at
+      - error
+      - id
+      - phone
+      - provider_message_id
+      - retry_count
+      - sent_at
+      - status
+      - template
+      - tenant
+    MethodEnum:
+      enum:
+      - CASH
+      - MPESA_C2B
+      - MPESA_STK
+      - BANK
+      type: string
+      description: |-
+        * `CASH` - Cash
+        * `MPESA_C2B` - M-Pesa C2B
+        * `MPESA_STK` - M-Pesa STK Push
+        * `BANK` - Bank transfer
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        body:
+          type: string
+          readOnly: true
+        level:
+          type: string
+          readOnly: true
+        link:
+          type: string
+          readOnly: true
+        read_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - body
+      - created_at
+      - id
+      - level
+      - link
+      - read_at
+      - title
+    PaginatedAuditLogList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
+    PaginatedLeaseList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lease'
+    PaginatedLedgerEntryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LedgerEntry'
+    PaginatedMessageLogList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageLog'
+    PaginatedNotificationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+    PaginatedPaymentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+    PaginatedPromiseList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Promise'
+    PaginatedPropertyAssignmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyAssignment'
+    PaginatedPropertyList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+    PaginatedReminderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reminder'
+    PaginatedTenantList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tenant'
+    PaginatedUnitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Unit'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedLeaseRequest:
+      type: object
+      properties:
+        tenant:
+          type: string
+          format: uuid
+        unit:
+          type: string
+          format: uuid
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        rent_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        due_day:
+          type: integer
+          maximum: 28
+          minimum: 1
+        grace_period_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        deposit_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        deposit_paid:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        late_fee_type:
+          $ref: '#/components/schemas/LateFeeTypeEnum'
+        late_fee_value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        late_fee_applies_after_grace:
+          type: boolean
+        proration_enabled:
+          type: boolean
+          description: Prorate the first and last month by days occupied.
+        status:
+          $ref: '#/components/schemas/LeaseStatusEnum'
+        termination_reason:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+    PatchedPromiseUpdateRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status66fEnum'
+        resolution_note:
+          type: string
+          maxLength: 255
+        promised_date:
+          type: string
+          format: date
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+    PatchedPropertyAssignmentRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+        property:
+          type: string
+          format: uuid
+    PatchedPropertyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        code:
+          type: string
+          minLength: 1
+          maxLength: 20
+        address:
+          type: string
+          maxLength: 255
+        city:
+          type: string
+          maxLength: 80
+        county:
+          type: string
+          maxLength: 80
+        mpesa_shortcode_override:
+          type: string
+          maxLength: 12
+        notes:
+          type: string
+        is_active:
+          type: boolean
+    PatchedTenantRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 20
+        alt_phone:
+          type: string
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        national_id:
+          type: string
+        emergency_contact:
+          type: string
+          maxLength: 150
+        notes:
+          type: string
+        status:
+          $ref: '#/components/schemas/TenantStatusEnum'
+    PatchedUnitRequest:
+      type: object
+      properties:
+        property:
+          type: string
+          format: uuid
+        code:
+          type: string
+          minLength: 1
+          maxLength: 20
+        unit_type:
+          type: string
+          maxLength: 60
+        bedrooms:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        default_rent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        default_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        status:
+          $ref: '#/components/schemas/UnitStatusEnum'
+        notes:
+          type: string
+    PatchedUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        must_change_password:
+          type: boolean
+        is_active:
+          type: boolean
+    PatchedUserUpdateRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        is_active:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        tenant_name:
+          type: string
+          readOnly: true
+          default: ''
+        lease:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        unit:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        unit_code:
+          type: string
+          readOnly: true
+          default: ''
+        property_name:
+          type: string
+          readOnly: true
+          default: ''
+        method:
+          allOf:
+          - $ref: '#/components/schemas/MethodEnum'
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/PaymentStatusEnum'
+          readOnly: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+        reference:
+          type: string
+          readOnly: true
+          description: M-Pesa receipt number or internal cash receipt number.
+        provider_txn_id:
+          type: string
+          readOnly: true
+        phone:
+          type: string
+          readOnly: true
+        bill_ref:
+          type: string
+          readOnly: true
+        received_by:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        received_by_name:
+          type: string
+          readOnly: true
+          default: ''
+        matched_by:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        matched_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        notes:
+          type: string
+          readOnly: true
+        match_note:
+          type: string
+          readOnly: true
+        photo:
+          type: string
+          format: uri
+          readOnly: true
+          nullable: true
+        receipt_number:
+          type: string
+          readOnly: true
+          default: ''
+        has_receipt:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount
+      - bill_ref
+      - created_at
+      - has_receipt
+      - id
+      - lease
+      - match_note
+      - matched_at
+      - matched_by
+      - method
+      - notes
+      - paid_at
+      - phone
+      - photo
+      - property_name
+      - provider_txn_id
+      - receipt_number
+      - received_by
+      - received_by_name
+      - reference
+      - status
+      - tenant
+      - tenant_name
+      - unit
+      - unit_code
+    PaymentStatusEnum:
+      enum:
+      - PENDING
+      - CONFIRMED
+      - UNMATCHED
+      - FAILED
+      - REVERSED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `CONFIRMED` - Confirmed
+        * `UNMATCHED` - Unmatched
+        * `FAILED` - Failed
+        * `REVERSED` - Reversed
+    Promise:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        lease:
+          type: string
+          format: uuid
+        tenant:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        unit_code:
+          type: string
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        promised_date:
+          type: string
+          format: date
+        note:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status66fEnum'
+        created_by:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        resolved_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        resolution_note:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount
+      - created_at
+      - created_by
+      - id
+      - lease
+      - promised_date
+      - resolved_at
+      - tenant
+      - tenant_name
+      - unit_code
+    PromiseRequest:
+      type: object
+      properties:
+        lease:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        promised_date:
+          type: string
+          format: date
+        note:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status66fEnum'
+        resolution_note:
+          type: string
+          maxLength: 255
+      required:
+      - amount
+      - lease
+      - promised_date
+    PromiseUpdate:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status66fEnum'
+        resolution_note:
+          type: string
+          maxLength: 255
+        promised_date:
+          type: string
+          format: date
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - amount
+      - promised_date
+    PromiseUpdateRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status66fEnum'
+        resolution_note:
+          type: string
+          maxLength: 255
+        promised_date:
+          type: string
+          format: date
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - amount
+      - promised_date
+    Property:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        code:
+          type: string
+          maxLength: 20
+        address:
+          type: string
+          maxLength: 255
+        city:
+          type: string
+          maxLength: 80
+        county:
+          type: string
+          maxLength: 80
+        mpesa_shortcode_override:
+          type: string
+          maxLength: 12
+        notes:
+          type: string
+        is_active:
+          type: boolean
+        units_count:
+          type: string
+          readOnly: true
+        occupied_units:
+          type: string
+          readOnly: true
+        caretakers:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - caretakers
+      - code
+      - created_at
+      - id
+      - name
+      - occupied_units
+      - units_count
+      - updated_at
+    PropertyAssignment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+        user_name:
+          type: string
+          readOnly: true
+        property:
+          type: string
+          format: uuid
+        property_name:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - property
+      - property_name
+      - user
+      - user_name
+    PropertyAssignmentRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+        property:
+          type: string
+          format: uuid
+      required:
+      - property
+      - user
+    PropertyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        code:
+          type: string
+          minLength: 1
+          maxLength: 20
+        address:
+          type: string
+          maxLength: 255
+        city:
+          type: string
+          maxLength: 80
+        county:
+          type: string
+          maxLength: 80
+        mpesa_shortcode_override:
+          type: string
+          maxLength: 12
+        notes:
+          type: string
+        is_active:
+          type: boolean
+      required:
+      - code
+      - name
+    Reminder:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        lease:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        unit_code:
+          type: string
+          readOnly: true
+        property_name:
+          type: string
+          readOnly: true
+        reminder_type:
+          allOf:
+          - $ref: '#/components/schemas/ReminderTypeEnum'
+          readOnly: true
+        period_key:
+          type: string
+          readOnly: true
+        scheduled_for:
+          type: string
+          format: date
+          readOnly: true
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status249Enum'
+          readOnly: true
+        amount_due:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        days_overdue:
+          type: integer
+          readOnly: true
+        message:
+          type: string
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount_due
+      - created_at
+      - days_overdue
+      - error
+      - id
+      - lease
+      - message
+      - period_key
+      - property_name
+      - reminder_type
+      - scheduled_for
+      - sent_at
+      - status
+      - tenant
+      - tenant_name
+      - unit_code
+    ReminderTypeEnum:
+      enum:
+      - PRE_DUE
+      - DUE
+      - OVERDUE_1
+      - OVERDUE_3
+      - OVERDUE_7
+      - OVERDUE_14
+      - OVERDUE_30
+      - MANUAL
+      type: string
+      description: |-
+        * `PRE_DUE` - Before due date
+        * `DUE` - Due today
+        * `OVERDUE_1` - Overdue 1 day
+        * `OVERDUE_3` - Overdue 3 days
+        * `OVERDUE_7` - Overdue 7 days
+        * `OVERDUE_14` - Overdue 14 days
+        * `OVERDUE_30` - Overdue 30 days
+        * `MANUAL` - Manual reminder
+    RoleEnum:
+      enum:
+      - ADMIN
+      - CARETAKER
+      - TENANT
+      type: string
+      description: |-
+        * `ADMIN` - Admin / Landlord
+        * `CARETAKER` - Caretaker
+        * `TENANT` - Tenant
+    SourceEnum:
+      enum:
+      - SYSTEM
+      - CASH
+      - MPESA
+      - MANUAL
+      type: string
+      description: |-
+        * `SYSTEM` - System
+        * `CASH` - Cash
+        * `MPESA` - M-Pesa
+        * `MANUAL` - Manual
+    Status249Enum:
+      enum:
+      - PENDING
+      - SENT
+      - FAILED
+      - SKIPPED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `SENT` - Sent
+        * `FAILED` - Failed
+        * `SKIPPED` - Skipped
+    Status66fEnum:
+      enum:
+      - OPEN
+      - KEPT
+      - BROKEN
+      - CANCELLED
+      type: string
+      description: |-
+        * `OPEN` - Open
+        * `KEPT` - Kept
+        * `BROKEN` - Broken
+        * `CANCELLED` - Cancelled
+    Tenant:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        full_name:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 20
+        alt_phone:
+          type: string
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        national_id:
+          type: string
+        emergency_contact:
+          type: string
+          maxLength: 150
+        notes:
+          type: string
+        status:
+          $ref: '#/components/schemas/TenantStatusEnum'
+        portal_enabled:
+          type: boolean
+          readOnly: true
+        active_lease_id:
+          type: string
+          readOnly: true
+        unit:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - active_lease_id
+      - created_at
+      - full_name
+      - id
+      - phone
+      - portal_enabled
+      - unit
+      - updated_at
+    TenantRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 20
+        alt_phone:
+          type: string
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        national_id:
+          type: string
+        emergency_contact:
+          type: string
+          maxLength: 150
+        notes:
+          type: string
+        status:
+          $ref: '#/components/schemas/TenantStatusEnum'
+      required:
+      - full_name
+      - phone
+    TenantStatusEnum:
+      enum:
+      - ACTIVE
+      - INACTIVE
+      type: string
+      description: |-
+        * `ACTIVE` - Active
+        * `INACTIVE` - Inactive
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    Unit:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        property:
+          type: string
+          format: uuid
+        property_name:
+          type: string
+          readOnly: true
+        property_code:
+          type: string
+          readOnly: true
+        code:
+          type: string
+          maxLength: 20
+        mpesa_bill_ref:
+          type: string
+          readOnly: true
+        unit_type:
+          type: string
+          maxLength: 60
+        bedrooms:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        default_rent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        default_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        status:
+          $ref: '#/components/schemas/UnitStatusEnum'
+        notes:
+          type: string
+        active_tenant:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - active_tenant
+      - code
+      - created_at
+      - id
+      - mpesa_bill_ref
+      - property
+      - property_code
+      - property_name
+      - updated_at
+    UnitRequest:
+      type: object
+      properties:
+        property:
+          type: string
+          format: uuid
+        code:
+          type: string
+          minLength: 1
+          maxLength: 20
+        unit_type:
+          type: string
+          maxLength: 60
+        bedrooms:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        default_rent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        default_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        status:
+          $ref: '#/components/schemas/UnitStatusEnum'
+        notes:
+          type: string
+      required:
+      - code
+      - property
+    UnitStatusEnum:
+      enum:
+      - VACANT
+      - OCCUPIED
+      - MAINTENANCE
+      type: string
+      description: |-
+        * `VACANT` - Vacant
+        * `OCCUPIED` - Occupied
+        * `MAINTENANCE` - Maintenance
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          maxLength: 150
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        organization:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        organization_name:
+          type: string
+          readOnly: true
+        totp_enabled:
+          type: boolean
+          readOnly: true
+        must_change_password:
+          type: boolean
+        is_active:
+          type: boolean
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - date_joined
+      - email
+      - full_name
+      - id
+      - organization
+      - organization_name
+      - role
+      - totp_enabled
+    UserCreate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          maxLength: 150
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - email
+      - full_name
+      - id
+    UserCreateRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        password:
+          type: string
+          writeOnly: true
+          minLength: 10
+      required:
+      - email
+      - full_name
+      - password
+    UserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        must_change_password:
+          type: boolean
+        is_active:
+          type: boolean
+      required:
+      - email
+      - full_name
+    UserUpdate:
+      type: object
+      properties:
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          maxLength: 150
+        is_active:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - full_name
+    UserUpdateRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        is_active:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - full_name
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+tags:
+- name: auth
+  description: Authentication and 2FA
+- name: properties
+  description: Properties and units
+- name: tenants
+  description: Tenant records
+- name: leases
+  description: Lease lifecycle
+- name: ledger
+  description: Immutable ledger
+- name: payments
+  description: Cash and M-Pesa payments
+- name: webhooks
+  description: M-Pesa callbacks
+- name: notifications
+  description: Reminders and SMS
+- name: reports
+  description: Dashboard and reports

@@ -117,9 +117,12 @@ class MessageLogViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ["created_at", "sent_at"]
 
     def get_queryset(self):
-        return MessageLog.objects.filter(
-            organization=self.request.user.organization
-        ).select_related("tenant")
+        organization_id = getattr(self.request.user, "organization_id", None)
+        if not organization_id:
+            return MessageLog.objects.none()
+        return MessageLog.objects.filter(organization_id=organization_id).select_related(
+            "tenant"
+        )
 
 
 class NotificationViewSet(
